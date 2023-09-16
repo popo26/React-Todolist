@@ -1,25 +1,41 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from 'react';
+import CreateTodo from "./components/CreateTodo";
+import TodoList from "./components/TodoList";
+import { nanoid } from 'nanoid';
+import TodoListItem from './components/TodoListItem';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+
+    const [todos, setTodos] = useState([]);
+
+    const addTodo = ((todo) => {
+        const updatedTodos = [
+            ...todos,
+            { id: nanoid(), name: todo }
+        ];
+        setTodos(updatedTodos)
+        console.log(todos)
+    });
+
+    const handleDelete = (id) => {
+        console.log("Deleting");
+        setTodos(prevTodos => {
+            return prevTodos.filter(todo => {
+                return todo.id !== id;
+            })
+        })
+    }
+
+    const monthNames = ["January", "February", "March", "April", "May","June","July", "August", "September", "October", "November","December"];
+    const date = `${new Date().getDate()} ${monthNames[new Date().getMonth()]} ${new Date().getFullYear()} `
+
+    return (
+        <div>
+            <h1>{date}</h1>
+            <CreateTodo onCreate={addTodo} />
+            <TodoList todos={todos} onDelete={handleDelete} />
+        </div>
+    )
+};
 
 export default App;
